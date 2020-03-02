@@ -54,8 +54,8 @@ sourceSets {
 }
 
 version = "2.0.0.0"
-group = "thelm.jaopca"
-archivesBaseName = "JAOPCA-1.15.2"
+group = "thelm.rslargepatterns"
+archivesBaseName = "RSLargePatterns-1.15.2"
 
 sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8'
 
@@ -97,9 +97,9 @@ dependencies {
 jar {
     manifest {
         attributes([
-                "Specification-Title": "JAOPCA",
+                "Specification-Title": "RSLargePatterns",
                 "Specification-Vendor": "thelm",
-                "Specification-Version": "3",
+                "Specification-Version": "2",
                 "Implementation-Title": "${archivesBaseName}",
                 "Implementation-Version": "${version}",
                 "Implementation-Vendor": "thelm",
