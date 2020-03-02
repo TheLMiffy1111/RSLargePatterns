@@ -62,19 +62,19 @@ public class TileLargePatternEncoder extends TileEntity implements IGuiProvider 
 			for(int i = 0; i < 90; ++i) {
 				if(!processingMatrix.getStackInSlot(i).isEmpty()) {
 					if(i >= 81) {
-						ItemPattern.setOutputSlot(pattern, i-81, processingMatrix.getStackInSlot(i));
+						ItemLargePattern.setOutputSlot(pattern, i-81, processingMatrix.getStackInSlot(i));
 					}
 					else {
-						ItemPattern.setInputSlot(pattern, i, processingMatrix.getStackInSlot(i));
+						ItemLargePattern.setInputSlot(pattern, i, processingMatrix.getStackInSlot(i));
 					}
 				}
 				FluidStack fluid = processingMatrixFluids.getStackInSlot(i);
 				if(fluid != null) {
 					if(i >= 81) {
-						ItemPattern.setFluidOutputSlot(pattern, i-81, fluid);
+						ItemLargePattern.setFluidOutputSlot(pattern, i-81, fluid);
 					}
 					else {
-						ItemPattern.setFluidInputSlot(pattern, i, fluid);
+						ItemLargePattern.setFluidInputSlot(pattern, i, fluid);
 					}
 				}
 			}

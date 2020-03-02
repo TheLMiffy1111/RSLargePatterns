@@ -12,6 +12,7 @@ import thelm.rslargepatterns.client.BakedModelLargePattern;
 import thelm.rslargepatterns.client.IModelRegister;
 import thelm.rslargepatterns.client.ItemColorLargePattern;
 import thelm.rslargepatterns.client.ModelUtil;
+import thelm.rslargepatterns.client.TileEntityItemStackRendererLargePattern;
 import thelm.rslargepatterns.item.ItemLargePattern;
 
 public class ClientProxy extends CommonProxy {
@@ -40,6 +41,7 @@ public class ClientProxy extends CommonProxy {
 		for(IModelRegister model : modelRegisterList) {
 			model.registerModels();
 		}
+		ItemLargePattern.INSTANCE.setTileEntityItemStackRenderer(new TileEntityItemStackRendererLargePattern());
 		ModelUtil.registerCallback(registry->{
 			IBakedModel existingModel = registry.getObject(ItemLargePattern.MODEL_LOCATION);
 			if(existingModel != null) {

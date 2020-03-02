@@ -50,7 +50,7 @@ public abstract class GuiAmount extends GuiBase {
 	protected abstract int getDefaultAmount();
 
 	protected Pair<Integer, Integer> getAmountPos() {
-		return Pair.of(7 + 2, 50 + 1);
+		return Pair.of(9, 51);
 	}
 
 	protected Pair<Integer, Integer> getOkCancelPos() {
@@ -79,9 +79,9 @@ public abstract class GuiAmount extends GuiBase {
 		int width = 30;
 		for(int i = 0; i < 3; ++i) {
 			String text = "+"+increments[i];
-            if(text.equals("+1000")) {
-                text = "+1B";
-            }
+			if(text.equals("+1000")) {
+				text = "+1B";
+			}
 			incrementButtons[i] = addButton(guiLeft+xx, guiTop+20, width, 20, text);
 			xx += width+3;
 		}
@@ -89,9 +89,9 @@ public abstract class GuiAmount extends GuiBase {
 		xx = 7;
 		for(int i = 0; i < 3; ++i) {
 			String text = "-"+increments[i];
-            if(text.equals("-1000")) {
-                text = "-1B";
-            }
+			if(text.equals("-1000")) {
+				text = "-1B";
+			}
 			incrementButtons[3+i] = addButton(guiLeft+xx, guiTop+ySize-20-7, width, 20, text);
 			xx += width+3;
 		}
@@ -109,6 +109,7 @@ public abstract class GuiAmount extends GuiBase {
 		fontRenderer.drawString(getTitle(), 7, 7, 0x404040);
 		GlStateManager.enableLighting();
 	}
+
 	@Override
 	protected void keyTyped(char character, int keyCode) throws IOException {
 		if(!checkHotbarKeys(keyCode) && amountField.textboxKeyTyped(character, keyCode)) {
@@ -144,12 +145,12 @@ public abstract class GuiAmount extends GuiBase {
 						oldAmount = 0;
 					}
 					String incrementButtonText = incrementButton.displayString;
-                    if(incrementButtonText.equals("+1B")) {
-                        incrementButtonText = "1000";
-                    }
-                    else if(incrementButtonText.equals("-1B")) {
-                        incrementButtonText = "-1000";
-                    }
+					if(incrementButtonText.equals("+1B")) {
+						incrementButtonText = "1000";
+					}
+					else if(incrementButtonText.equals("-1B")) {
+						incrementButtonText = "-1000";
+					}
 					int newAmount = Integer.parseInt(incrementButtonText);
 					newAmount = MathHelper.clamp(oldAmount+newAmount, 0, getMaxAmount());
 					amountField.setText(String.valueOf(newAmount));

@@ -13,7 +13,7 @@ buildscript {
     }
     dependencies {
         classpath "net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT"
-		classpath "com.wynprice.cursemaven:CurseMaven:2.1.0"
+        classpath "com.wynprice.cursemaven:CurseMaven:2.1.0"
         //classpath "com.github.Wyn-Price:CurseMaven:f0d58155e6"
     }
 }
@@ -46,7 +46,7 @@ repositories {
     }
 }
 
-version = "1.12.2-1.0.0.0"
+version = "1.12.2-1.0.0.1"
 group= "thelm.rslargepatterns"
 archivesBaseName = "RSLargePatterns"
 
@@ -81,7 +81,7 @@ dependencies {
     deobfCompile("cofh:ThermalDynamics:1.12.2-2.5.5.21:universal") {
         transitive = false
     }
-	deobfCompile "CraftTweaker2:CraftTweaker2-MC1120-Main:1.12-4.0.9.285"
+    deobfCompile "CraftTweaker2:CraftTweaker2-MC1120-Main:1.12-4.0.9.285"
     deobfCompile "mcp.mobius.waila:Hwyla:1.8.25-B40_1.12"
     deobfCompile "refinedstorage:refinedstorage:1.6.15-380"
 
