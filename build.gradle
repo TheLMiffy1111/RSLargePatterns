@@ -1,33 +1,39 @@
 buildscript {
     repositories {
-        jcenter()
         maven {
-            url = "http://files.minecraftforge.net/maven"
+            url = "https://files.minecraftforge.net/maven/"
         }
         maven {
             url = "https://plugins.gradle.org/m2/"
         }
+        jcenter()
+        mavenCentral()
         maven {
             url = "https://jitpack.io/"
         }
     }
     dependencies {
-        classpath "net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT"
-		classpath "com.wynprice.cursemaven:CurseMaven:2.1.0"
+        classpath group: "net.minecraftforge.gradle", name: "ForgeGradle", version: "3.+", changing: true
+        classpath "com.wynprice.cursemaven:CurseMaven:2.1.0"
         //classpath "com.github.Wyn-Price:CurseMaven:f0d58155e6"
     }
 }
 
-apply plugin: "net.minecraftforge.gradle.forge"
+apply plugin: "net.minecraftforge.gradle"
+apply plugin: "eclipse"
+apply plugin: "maven"
 apply plugin: "com.wynprice.cursemaven"
 
 repositories {
     jcenter()
-    maven {
-        url = "http://maven.blamejared.com"
+    flatDir {
+        dirs "libs"
     }
     maven {
-        url = "http://dvs1.progwml6.com/files/maven"
+        url = "https://dvs1.progwml6.com/files/maven/"
+    }
+    maven {
+        url = "https://maven.blamejared.com/"
     }
     maven {
         url = "http://tehnut.info/maven"
@@ -39,64 +45,65 @@ repositories {
         url = "https://repo.raoulvdberge.com/"
     }
     maven {
-        url = "https://minecraft.curseforge.com/api/maven/"
-    }
-    maven {
-        url = "https://modmaven.k-4u.nl/" 
+        url = "https://jitpack.io/"
     }
 }
 
-version = "1.12.2-1.0.0.0"
-group= "thelm.rslargepatterns"
-archivesBaseName = "RSLargePatterns"
-
-sourceCompatibility = targetCompatibility = "1.8"
-compileJava {
-    sourceCompatibility = targetCompatibility = "1.8"
+sourceSets {
+    main
 }
+
+version = "2.0.0.0"
+group = "thelm.jaopca"
+archivesBaseName = "JAOPCA-1.15.2"
+
+sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8'
 
 minecraft {
-    version = "1.12.2-14.23.5.2824"
-    runDir = "run"
-    mappings = "stable_39"
-    makeObfSourceJar = false
+    mappings channel: 'snapshot', version: '20200123-1.15.1'
+    accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
+    runs {
+        client = {
+            properties 'forge.logging.markers': 'SCAN,REGISTRIES,REGISTRYDUMP'
+            properties 'forge.logging.console.level': 'debug'
+            workingDirectory project.file('run').canonicalPath
+            source sourceSets.main
+        }
+        server = {
+            properties 'forge.logging.markers': 'SCAN,REGISTRIES,REGISTRYDUMP'
+            properties 'forge.logging.console.level': 'debug'
+            workingDirectory project.file('run').canonicalPath
+            source sourceSets.main
+        }
+    }
 }
 
 dependencies {
-    deobfCompile "mezz.jei:jei_1.12.2:4.15.0.273"
-    deobfCompile "codechicken:CodeChickenLib:1.12.2-3.2.3.357:universal"
-    deobfCompile "cofh:RedstoneFlux:1.12-2.1.0.6:universal"
-    deobfCompile("cofh:CoFHCore:1.12.2-4.6.3.27:universal") {
-        transitive = false
-    }
-    deobfCompile("cofh:CoFHWorld:1.12.2-1.3.1.7:universal") {
-        transitive = false
-    }
-    deobfCompile("cofh:ThermalFoundation:1.12.2-2.6.3.27:universal") {
-        transitive = false
-    }
-    deobfCompile("cofh:ThermalExpansion:1.12.2-5.5.4.43:universal") {
-        transitive = false
-    }
-    deobfCompile("cofh:ThermalDynamics:1.12.2-2.5.5.21:universal") {
-        transitive = false
-    }
-	deobfCompile "CraftTweaker2:CraftTweaker2-MC1120-Main:1.12-4.0.9.285"
-    deobfCompile "mcp.mobius.waila:Hwyla:1.8.25-B40_1.12"
-    deobfCompile "refinedstorage:refinedstorage:1.6.15-380"
+    minecraft "net.minecraftforge:forge:1.15.2-31.1.18"
+    implementation fg.deobf("mezz.jei:jei-1.15.2:6.0.0.2")
+    implementation fg.deobf("com.blamejared.crafttweaker:CraftTweaker-1.15.2:6.0.0.9")
+    implementation fg.deobf("mcp.mobius.waila:Hwyla:1.10.8-B72_1.15.2")
+    implementation fg.deobf("com.raoulvdberge:refinedstorage:1.8.1+9")
 
-    deobfCompile "curse.maven:cucumber:2645867"
-    deobfCompile "curse.maven:extended-crafting:2777071"
-    deobfCompile "curse.maven:refined-avaritia:2680357"
+    //JitPack
 
-    deobfCompile("appeng:appliedenergistics2:rv6-stable-7") {
-        transitive = false
-    }
-    deobfCompile("morph.avaritia:Avaritia:1.12.2-3.3.0.33:universal") {
-        transitive = false
-    }
+    //CurseMaven
+    
+    //Local
+    implementation fg.deobf("com.blakebr0:Cucumber-1.15.2:3.0.2")
+    implementation fg.deobf("com.blakebr0:ExtendedCrafting-1.15.2:2.0.0")
 }
 
-processResources
-{
+jar {
+    manifest {
+        attributes([
+                "Specification-Title": "JAOPCA",
+                "Specification-Vendor": "thelm",
+                "Specification-Version": "3",
+                "Implementation-Title": "${archivesBaseName}",
+                "Implementation-Version": "${version}",
+                "Implementation-Vendor": "thelm",
+                //"Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
+        ],)
+    }
 }

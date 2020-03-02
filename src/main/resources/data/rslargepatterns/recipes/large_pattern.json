@@ -1,0 +1,26 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "result": {
+        "item": "rslargepatterns:large_pattern",
+        "count": 1
+    },
+    "pattern": [
+        "GPG",
+        "PAP",
+        "EEE"
+    ],
+    "key": {
+        "G": {
+            "tag": "forge:glass"
+        },
+        "P": {
+            "item": "refinedstorage:pattern"
+        },
+        "A": {
+            "item": "refinedstorage:advanced_processor"
+        },
+        "E": {
+            "item": "refinedstorage:quartz_enriched_iron"
+        }
+    }
+}

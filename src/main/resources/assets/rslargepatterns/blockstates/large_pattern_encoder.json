@@ -1,14 +1,5 @@
 {
-	"forge_marker": 1,
-    "defaults": {
-        "textures": {
-            "side": "rslargepatterns:blocks/large_pattern_encoder_side",
-            "top": "rslargepatterns:blocks/large_pattern_encoder_top",
-            "bottom": "refinedstorage:blocks/side"
-        },
-        "model": "cube_bottom_top"
-    },
     "variants": {
-        "normal": [{}]
+        "": { "model": "rslargepatterns:block/large_pattern_encoder" }
     }
 }

@@ -1,88 +1,49 @@
 package thelm.rslargepatterns.util;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPattern;
 import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPatternContainer;
 import com.raoulvdberge.refinedstorage.api.util.IComparer;
 import com.raoulvdberge.refinedstorage.apiimpl.API;
-import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.registry.CraftingTaskFactory;
+import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.AllowedTagList;
+import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.task.v5.CraftingTaskFactory;
 
-import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.IRecipe;
+import net.minecraft.item.crafting.ICraftingRecipe;
 import net.minecraft.util.NonNullList;
-import net.minecraft.world.World;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.oredict.OreDictionary;
-import thelm.rslargepatterns.item.ItemLargePattern;
 
-/**
- * Code copied from Refined Storage to "maintain the coding style"
- */
 public class LargeProcessingPattern implements ICraftingPattern {
 
-	private ICraftingPatternContainer container;
-	private ItemStack stack;
-	private boolean oredict;
-	private boolean valid;
-	private IRecipe recipe;
-	private List<NonNullList<ItemStack>> inputs = new ArrayList<>();
-	private NonNullList<ItemStack> outputs = NonNullList.create();
-	private NonNullList<ItemStack> byproducts = NonNullList.create();
-	private NonNullList<FluidStack> fluidInputs = NonNullList.create();
-	private NonNullList<FluidStack> fluidOutputs = NonNullList.create();
+	private final ICraftingPatternContainer container;
+	private final ItemStack stack;
+	private final boolean valid;
+	private final ITextComponent errorMessage;
+	private final ICraftingRecipe recipe;
+	private final List<NonNullList<ItemStack>> inputs;
+	private final NonNullList<ItemStack> outputs;
+	private final List<NonNullList<FluidStack>> fluidInputs;
+	private final NonNullList<FluidStack> fluidOutputs;
+	private final LargeAllowedTagList allowedTagList;
 
-	public LargeProcessingPattern(World world, ICraftingPatternContainer container, ItemStack stack) {
+	public LargeProcessingPattern(ICraftingPatternContainer container, ItemStack stack, ITextComponent errorMessage, boolean valid, ICraftingRecipe recipe, List<NonNullList<ItemStack>> inputs, NonNullList<ItemStack> outputs, List<NonNullList<FluidStack>> fluidInputs, NonNullList<FluidStack> fluidOutputs, LargeAllowedTagList allowedTagList) {
 		this.container = container;
 		this.stack = stack;
-		this.oredict = ItemLargePattern.isOredict(stack);
-		for(int i = 0; i < 81; ++i) {
-			ItemStack input = ItemLargePattern.getInputSlot(stack, i);
-			if(input.isEmpty()) {
-				inputs.add(NonNullList.create());
-			}
-			else if(oredict) {
-				NonNullList<ItemStack> ores = NonNullList.create();
-				ores.add(input.copy());
-				for(int id : OreDictionary.getOreIDs(input)) {
-					String name = OreDictionary.getOreName(id);
-					for(ItemStack ore : OreDictionary.getOres(name)) {
-						if(ore.getMetadata() == OreDictionary.WILDCARD_VALUE) {
-							ore.getItem().getSubItems(CreativeTabs.SEARCH, ores);
-						}
-						else {
-							ores.add(ore.copy());
-						}
-					}
-				}
-				for(ItemStack ore : ores) {
-					ore.setCount(input.getCount());
-				}
-				inputs.add(ores);
-			}
-			else {
-				inputs.add(NonNullList.from(ItemStack.EMPTY, input));
-			}
-			if(i < 9) {
-				ItemStack output = ItemLargePattern.getOutputSlot(stack, i);
-				if(!output.isEmpty()) {
-					this.valid = true; // As soon as we have one output, we are valid.
-					outputs.add(output);
-				}
-				FluidStack fluidInput = ItemLargePattern.getFluidInputSlot(stack, i);
-				if(fluidInput != null) {
-					this.valid = true;
-					fluidInputs.add(fluidInput);
-				}
-				FluidStack fluidOutput = ItemLargePattern.getFluidOutputSlot(stack, i);
-				if(fluidOutput != null) {
-					this.valid = true;
-					fluidOutputs.add(fluidOutput);
-				}
-			}
-		}
+		this.valid = valid;
+		this.errorMessage = errorMessage;
+		this.recipe = recipe;
+		this.inputs = inputs;
+		this.outputs = outputs;
+		this.fluidInputs = fluidInputs;
+		this.fluidOutputs = fluidOutputs;
+		this.allowedTagList = allowedTagList;
+	}
+
+	public LargeAllowedTagList getAllowedTagList() {
+		return allowedTagList;
 	}
 
 	@Override
@@ -101,13 +62,13 @@ public class LargeProcessingPattern implements ICraftingPattern {
 	}
 
 	@Override
-	public boolean isProcessing() {
-		return true;
+	public ITextComponent getErrorMessage() {
+		return errorMessage;
 	}
 
 	@Override
-	public boolean isOredict() {
-		return oredict;
+	public boolean isProcessing() {
+		return true;
 	}
 
 	@Override
@@ -120,6 +81,7 @@ public class LargeProcessingPattern implements ICraftingPattern {
 		return outputs;
 	}
 
+	@Override
 	public ItemStack getOutput(NonNullList<ItemStack> took) {
 		throw new IllegalStateException("Cannot get crafting output from processing pattern");
 	}
@@ -135,7 +97,7 @@ public class LargeProcessingPattern implements ICraftingPattern {
 	}
 
 	@Override
-	public NonNullList<FluidStack> getFluidInputs() {
+	public List<NonNullList<FluidStack>> getFluidInputs() {
 		return fluidInputs;
 	}
 
@@ -145,19 +107,19 @@ public class LargeProcessingPattern implements ICraftingPattern {
 	}
 
 	@Override
-	public String getId() {
+	public ResourceLocation getCraftingTaskFactoryId() {
 		return CraftingTaskFactory.ID;
 	}
 
 	@Override
 	public boolean canBeInChainWith(ICraftingPattern other) {
-		if(!other.isProcessing() || other.isOredict() != oredict) {
+		if(!other.isProcessing()) {
 			return false;
 		}
-		if(other.getInputs().size() != inputs.size() ||
-				other.getFluidInputs().size() != fluidInputs.size() ||
-				other.getOutputs().size() != outputs.size() ||
-				other.getFluidOutputs().size() != fluidOutputs.size()) {
+		if((other.getInputs().size() != inputs.size()) ||
+				(other.getFluidInputs().size() != fluidInputs.size()) ||
+				(other.getOutputs().size() != outputs.size()) ||
+				(other.getFluidOutputs().size() != fluidOutputs.size())) {
 			return false;
 		}
 		for(int i = 0; i < inputs.size(); ++i) {
@@ -173,8 +135,15 @@ public class LargeProcessingPattern implements ICraftingPattern {
 			}
 		}
 		for(int i = 0; i < fluidInputs.size(); ++i) {
-			if(!API.instance().getComparer().isEqual(fluidInputs.get(i), other.getFluidInputs().get(i), IComparer.COMPARE_NBT | IComparer.COMPARE_QUANTITY)) {
+			List<FluidStack> inputs = this.fluidInputs.get(i);
+			List<FluidStack> otherInputs = other.getFluidInputs().get(i);
+			if(inputs.size() != otherInputs.size()) {
 				return false;
+			}
+			for(int j = 0; j < inputs.size(); ++j) {
+				if(!API.instance().getComparer().isEqual(inputs.get(j), otherInputs.get(j), IComparer.COMPARE_NBT | IComparer.COMPARE_QUANTITY)) {
+					return false;
+				}
 			}
 		}
 		for(int i = 0; i < outputs.size(); ++i) {
@@ -193,23 +162,22 @@ public class LargeProcessingPattern implements ICraftingPattern {
 	@Override
 	public int getChainHashCode() {
 		int result = 0;
-		result = 31 * result + (oredict ? 1 : 0);
-		for(List<ItemStack> inputs : inputs) {
+		for(List<ItemStack> inputs : this.inputs) {
 			for(ItemStack input : inputs) {
 				result = 31 * result + API.instance().getItemStackHashCode(input);
 			}
 		}
-		for(FluidStack input : fluidInputs) {
-			result = 31 * result + API.instance().getFluidStackHashCode(input);
+		for(List<FluidStack> inputs : this.fluidInputs) {
+			for(FluidStack input : inputs) {
+				result = 31 * result + API.instance().getFluidStackHashCode(input);
+			}
 		}
-		for(ItemStack output : outputs) {
+		for(ItemStack output : this.outputs) {
 			result = 31 * result + API.instance().getItemStackHashCode(output);
 		}
-		for(FluidStack output : fluidOutputs) {
+
+		for(FluidStack output : this.fluidOutputs) {
 			result = 31 * result + API.instance().getFluidStackHashCode(output);
-		}
-		for(ItemStack byproduct : byproducts) {
-			result = 31 * result + API.instance().getItemStackHashCode(byproduct);
 		}
 		return result;
 	}

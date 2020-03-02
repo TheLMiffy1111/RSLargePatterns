@@ -1,43 +1,56 @@
 package thelm.rslargepatterns.network;
 
-import net.minecraftforge.fml.common.network.NetworkRegistry;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
-import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
-import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
-import net.minecraftforge.fml.relauncher.Side;
-import thelm.rslargepatterns.RSLargePatterns;
-import thelm.rslargepatterns.network.packet.PacketClearPattern;
-import thelm.rslargepatterns.network.packet.PacketCreatePattern;
-import thelm.rslargepatterns.network.packet.PacketFluidSlotUpdate;
-import thelm.rslargepatterns.network.packet.PacketSetFluidStack;
-import thelm.rslargepatterns.network.packet.PacketSetItemStack;
-import thelm.rslargepatterns.network.packet.PacketSetOredictPattern;
-import thelm.rslargepatterns.network.packet.PacketSetProcessingType;
-import thelm.rslargepatterns.network.packet.PacketSetRecipe;
+import java.util.Optional;
 
-public class PacketHandler<REQ extends ISelfHandleMessage<? extends IMessage>> implements IMessageHandler<REQ, IMessage> {
+import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.network.NetworkDirection;
+import net.minecraftforge.fml.network.NetworkRegistry;
+import net.minecraftforge.fml.network.simple.SimpleChannel;
+import thelm.rslargepatterns.network.packet.ClearPatternPacket;
+import thelm.rslargepatterns.network.packet.CreatePatternPacket;
+import thelm.rslargepatterns.network.packet.FluidSlotUpdatePacket;
+import thelm.rslargepatterns.network.packet.SetAllowedFluidTagsPacket;
+import thelm.rslargepatterns.network.packet.SetAllowedItemTagsPacket;
+import thelm.rslargepatterns.network.packet.SetFluidStackPacket;
+import thelm.rslargepatterns.network.packet.SetItemStackPacket;
+import thelm.rslargepatterns.network.packet.SetProcessingTypePacket;
+import thelm.rslargepatterns.network.packet.SetRecipePacket;
 
-	public static final SimpleNetworkWrapper INSTANCE = NetworkRegistry.INSTANCE.newSimpleChannel(RSLargePatterns.MOD_ID);
+public class PacketHandler {
+
+	public static final String PROTOCOL_VERSION = "1";
+	public static final SimpleChannel INSTANCE = NetworkRegistry.newSimpleChannel(
+			new ResourceLocation("rslargepatterns", PROTOCOL_VERSION),
+			()->PROTOCOL_VERSION, PROTOCOL_VERSION::equals, PROTOCOL_VERSION::equals);
 
 	public static void registerPackets() {
 		int id = 0;
-		INSTANCE.registerMessage(get(), PacketClearPattern.class, id++, Side.SERVER);
-		INSTANCE.registerMessage(get(), PacketCreatePattern.class, id++, Side.SERVER);
-		INSTANCE.registerMessage(get(), PacketSetOredictPattern.class, id++, Side.SERVER);
-		INSTANCE.registerMessage(get(), PacketSetProcessingType.class, id++, Side.SERVER);
-		INSTANCE.registerMessage(get(), PacketSetItemStack.class, id++, Side.SERVER);
-		INSTANCE.registerMessage(get(), PacketSetFluidStack.class, id++, Side.SERVER);
-		INSTANCE.registerMessage(get(), PacketFluidSlotUpdate.class, id++, Side.CLIENT);
-		INSTANCE.registerMessage(get(), PacketSetRecipe.class, id++, Side.SERVER);
-	}
-
-	public static <REQ extends ISelfHandleMessage<? extends IMessage>> PacketHandler<REQ> get() {
-		return new PacketHandler<>();
-	}
-
-	@Override
-	public IMessage onMessage(REQ message, MessageContext ctx) {
-		return message.onMessage(ctx);
+		INSTANCE.registerMessage(id++, ClearPatternPacket.class,
+				ClearPatternPacket::encode, ClearPatternPacket::decode,
+				ClearPatternPacket::handle, Optional.of(NetworkDirection.PLAY_TO_SERVER));
+		INSTANCE.registerMessage(id++, CreatePatternPacket.class,
+				CreatePatternPacket::encode, CreatePatternPacket::decode,
+				CreatePatternPacket::handle, Optional.of(NetworkDirection.PLAY_TO_SERVER));
+		INSTANCE.registerMessage(id++, SetProcessingTypePacket.class,
+				SetProcessingTypePacket::encode, SetProcessingTypePacket::decode,
+				SetProcessingTypePacket::handle, Optional.of(NetworkDirection.PLAY_TO_SERVER));
+		INSTANCE.registerMessage(id++, SetItemStackPacket.class,
+				SetItemStackPacket::encode, SetItemStackPacket::decode,
+				SetItemStackPacket::handle, Optional.of(NetworkDirection.PLAY_TO_SERVER));
+		INSTANCE.registerMessage(id++, SetFluidStackPacket.class,
+				SetFluidStackPacket::encode, SetFluidStackPacket::decode,
+				SetFluidStackPacket::handle, Optional.of(NetworkDirection.PLAY_TO_SERVER));
+		INSTANCE.registerMessage(id++, SetAllowedItemTagsPacket.class,
+				SetAllowedItemTagsPacket::encode, SetAllowedItemTagsPacket::decode,
+				SetAllowedItemTagsPacket::handle, Optional.of(NetworkDirection.PLAY_TO_SERVER));
+		INSTANCE.registerMessage(id++, SetAllowedFluidTagsPacket.class,
+				SetAllowedFluidTagsPacket::encode, SetAllowedFluidTagsPacket::decode,
+				SetAllowedFluidTagsPacket::handle, Optional.of(NetworkDirection.PLAY_TO_SERVER));
+		INSTANCE.registerMessage(id++, FluidSlotUpdatePacket.class,
+				FluidSlotUpdatePacket::encode, FluidSlotUpdatePacket::decode,
+				FluidSlotUpdatePacket::handle, Optional.of(NetworkDirection.PLAY_TO_CLIENT));
+		INSTANCE.registerMessage(id++, SetRecipePacket.class,
+				SetRecipePacket::encode, SetRecipePacket::decode,
+				SetRecipePacket::handle, Optional.of(NetworkDirection.PLAY_TO_SERVER));
 	}
 }

@@ -1,0 +1,17 @@
+modLoader="javafml"
+loaderVersion="[28,)"
+issueTrackerURL="https://github.com/TheLMiffy1111/RSLargePatterns/issues"
+displayURL="https://www.curseforge.com/minecraft/mc-mods/rslargepatterns"
+authors="TheLMiffy1111"
+[[mods]]
+modId="rslargepatterns"
+version="${file.jarVersion}"
+displayName="Refined Storage Large Patterns"
+description="An Refined Storage addon that adds patterns with more than 9 inputs."
+
+[[dependencies.jaopca]]
+    modId="forge"
+    mandatory=false
+    versionRange="[30.0.48,)"
+    ordering="NONE"
+    side="BOTH"
