@@ -9,9 +9,15 @@ version="${file.jarVersion}"
 displayName="Refined Storage Large Patterns"
 description="An Refined Storage addon that adds patterns with more than 9 inputs."
 
-[[dependencies.jaopca]]
+[[dependencies.rslargepatterns]]
     modId="forge"
-    mandatory=false
+    mandatory=true
     versionRange="[30.0.48,)"
+    ordering="NONE"
+    side="BOTH"
+[[dependencies.rslargepatterns]]
+    modId="refinedstorage"
+    mandatory=true
+    versionRange="[1.8.5,)"
     ordering="NONE"
     side="BOTH"
