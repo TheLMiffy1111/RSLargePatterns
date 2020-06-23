@@ -5,10 +5,9 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
-import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPatternContainer;
-import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.AllowedTagList;
-import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.CraftingPatternFactoryException;
-import com.raoulvdberge.refinedstorage.item.PatternItem;
+import com.refinedmods.refinedstorage.api.autocrafting.ICraftingPatternContainer;
+import com.refinedmods.refinedstorage.apiimpl.autocrafting.CraftingPatternFactoryException;
+import com.refinedmods.refinedstorage.item.PatternItem;
 
 import net.minecraft.fluid.Fluid;
 import net.minecraft.item.Item;

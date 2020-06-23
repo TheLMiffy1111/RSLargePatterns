@@ -6,11 +6,11 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPattern;
-import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPatternContainer;
-import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPatternProvider;
-import com.raoulvdberge.refinedstorage.render.Styles;
-import com.raoulvdberge.refinedstorage.util.RenderUtils;
+import com.refinedmods.refinedstorage.api.autocrafting.ICraftingPattern;
+import com.refinedmods.refinedstorage.api.autocrafting.ICraftingPatternContainer;
+import com.refinedmods.refinedstorage.api.autocrafting.ICraftingPatternProvider;
+import com.refinedmods.refinedstorage.render.Styles;
+import com.refinedmods.refinedstorage.util.RenderUtils;
 
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.PlayerEntity;

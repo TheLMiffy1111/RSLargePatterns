@@ -2,12 +2,12 @@ package thelm.rslargepatterns.util;
 
 import java.util.List;
 
-import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPattern;
-import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPatternContainer;
-import com.raoulvdberge.refinedstorage.api.util.IComparer;
-import com.raoulvdberge.refinedstorage.apiimpl.API;
-import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.AllowedTagList;
-import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.task.v5.CraftingTaskFactory;
+import com.refinedmods.refinedstorage.RS;
+import com.refinedmods.refinedstorage.api.autocrafting.ICraftingPattern;
+import com.refinedmods.refinedstorage.api.autocrafting.ICraftingPatternContainer;
+import com.refinedmods.refinedstorage.api.util.IComparer;
+import com.refinedmods.refinedstorage.apiimpl.API;
+import com.refinedmods.refinedstorage.apiimpl.autocrafting.task.v5.CraftingTaskFactory;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.ICraftingRecipe;
@@ -108,7 +108,9 @@ public class LargeProcessingPattern implements ICraftingPattern {
 
 	@Override
 	public ResourceLocation getCraftingTaskFactoryId() {
-		return CraftingTaskFactory.ID;
+		return RS.SERVER_CONFIG.getAutocrafting().useExperimentalAutocrafting()
+				? com.refinedmods.refinedstorage.apiimpl.autocrafting.task.v6.CraftingTaskFactory.ID
+						: CraftingTaskFactory.ID;
 	}
 
 	@Override

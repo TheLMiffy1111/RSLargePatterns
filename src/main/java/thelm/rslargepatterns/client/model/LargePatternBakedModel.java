@@ -5,8 +5,8 @@ import java.util.Random;
 
 import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.matrix.MatrixStack;
-import com.raoulvdberge.refinedstorage.api.autocrafting.ICraftingPatternRenderHandler;
-import com.raoulvdberge.refinedstorage.apiimpl.API;
+import com.refinedmods.refinedstorage.api.autocrafting.ICraftingPatternRenderHandler;
+import com.refinedmods.refinedstorage.apiimpl.API;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;

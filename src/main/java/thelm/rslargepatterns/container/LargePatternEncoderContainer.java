@@ -1,6 +1,6 @@
 package thelm.rslargepatterns.container;
 
-import com.raoulvdberge.refinedstorage.tile.config.IType;
+import com.refinedmods.refinedstorage.tile.config.IType;
 
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.ContainerType;

@@ -42,7 +42,7 @@ repositories {
         url = "http://maven.covers1624.net/"
     }
     maven {
-        url = "https://repo.raoulvdberge.com/"
+        url = "https://repo.refinedmods.com/"
     }
     maven {
         url = "https://jitpack.io/"
@@ -53,7 +53,7 @@ sourceSets {
     main
 }
 
-version = "2.0.0.0"
+version = "2.0.0.1"
 group = "thelm.rslargepatterns"
 archivesBaseName = "RSLargePatterns-1.15.2"
 
@@ -83,7 +83,7 @@ dependencies {
     implementation fg.deobf("mezz.jei:jei-1.15.2:6.0.0.2")
     implementation fg.deobf("com.blamejared.crafttweaker:CraftTweaker-1.15.2:6.0.0.9")
     implementation fg.deobf("mcp.mobius.waila:Hwyla:1.10.8-B72_1.15.2")
-    implementation fg.deobf("com.raoulvdberge:refinedstorage:1.8.1+9")
+    implementation fg.deobf("com.refinedmods:refinedstorage:1.8.5+54")
 
     //JitPack
 

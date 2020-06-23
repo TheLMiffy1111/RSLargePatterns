@@ -5,9 +5,9 @@ import java.util.Arrays;
 import org.lwjgl.opengl.GL11;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.raoulvdberge.refinedstorage.RS;
-import com.raoulvdberge.refinedstorage.apiimpl.API;
-import com.raoulvdberge.refinedstorage.render.FluidRenderer;
+import com.refinedmods.refinedstorage.RS;
+import com.refinedmods.refinedstorage.apiimpl.API;
+import com.refinedmods.refinedstorage.render.FluidRenderer;
 
 import net.minecraft.client.audio.SimpleSound;
 import net.minecraft.client.gui.widget.Widget;

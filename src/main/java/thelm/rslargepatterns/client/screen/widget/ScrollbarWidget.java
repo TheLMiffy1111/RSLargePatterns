@@ -4,11 +4,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.raoulvdberge.refinedstorage.RS;
-import com.raoulvdberge.refinedstorage.integration.jei.GridRecipeTransferHandler;
-import com.raoulvdberge.refinedstorage.integration.jei.JeiIntegration;
-import com.raoulvdberge.refinedstorage.screen.widget.ScrollbarWidgetListener;
-import com.raoulvdberge.refinedstorage.util.RenderUtils;
+import com.refinedmods.refinedstorage.screen.widget.ScrollbarWidgetListener;
+import com.refinedmods.refinedstorage.util.RenderUtils;
 
 import net.minecraft.client.gui.IGuiEventListener;
 import net.minecraft.util.ResourceLocation;

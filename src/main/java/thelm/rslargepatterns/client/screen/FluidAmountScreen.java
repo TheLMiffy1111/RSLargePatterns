@@ -4,7 +4,7 @@ import java.util.function.Function;
 
 import org.apache.commons.lang3.tuple.Pair;
 
-import com.raoulvdberge.refinedstorage.util.StackUtils;
+import com.refinedmods.refinedstorage.util.StackUtils;
 
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.PlayerInventory;

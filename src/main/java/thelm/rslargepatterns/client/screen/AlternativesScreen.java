@@ -8,10 +8,9 @@ import java.util.Set;
 import org.lwjgl.glfw.GLFW;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.raoulvdberge.refinedstorage.apiimpl.autocrafting.AllowedTagList;
-import com.raoulvdberge.refinedstorage.render.FluidRenderer;
-import com.raoulvdberge.refinedstorage.tile.config.IType;
-import com.raoulvdberge.refinedstorage.util.RenderUtils;
+import com.refinedmods.refinedstorage.render.FluidRenderer;
+import com.refinedmods.refinedstorage.tile.config.IType;
+import com.refinedmods.refinedstorage.util.RenderUtils;
 
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.resources.I18n;
