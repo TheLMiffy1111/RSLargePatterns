@@ -125,8 +125,8 @@ public class LargePatternEncoderTile extends TileEntity implements INamedContain
 	}
 
 	@Override
-	public void read(CompoundNBT nbt) {
-		super.read(nbt);
+	public void read(BlockState state, CompoundNBT nbt) {
+		super.read(state, nbt);
 		readSync(nbt);
 		patterns.readFromNBT(nbt);
 		processingMatrix.readFromNBT(nbt.getCompound(NBT_PROCESSING_MATRIX));
@@ -165,7 +165,7 @@ public class LargePatternEncoderTile extends TileEntity implements INamedContain
 	}
 
 	@Override
-	public void handleUpdateTag(CompoundNBT tag) {
+	public void handleUpdateTag(BlockState state, CompoundNBT tag) {
 		readSync(tag);
 	}
 

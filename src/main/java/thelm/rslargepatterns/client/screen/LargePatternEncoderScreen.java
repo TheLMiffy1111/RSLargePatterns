@@ -4,22 +4,23 @@ import java.util.Arrays;
 
 import org.lwjgl.opengl.GL11;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.refinedmods.refinedstorage.RS;
 import com.refinedmods.refinedstorage.apiimpl.API;
 import com.refinedmods.refinedstorage.render.FluidRenderer;
+import com.refinedmods.refinedstorage.render.Styles;
 
 import net.minecraft.client.audio.SimpleSound;
 import net.minecraft.client.gui.widget.Widget;
 import net.minecraft.client.gui.widget.button.Button;
-import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.ClickType;
 import net.minecraft.inventory.container.Slot;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.ModList;
@@ -57,8 +58,8 @@ public class LargePatternEncoderScreen extends BaseScreen<LargePatternEncoderCon
 	}
 
 	@Override
-	protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
-		super.drawGuiContainerBackgroundLayer(partialTicks, mouseX, mouseY);
+	protected void drawGuiContainerBackgroundLayer(MatrixStack matrixStack, float partialTicks, int mouseX, int mouseY) {
+		super.drawGuiContainerBackgroundLayer(matrixStack, partialTicks, mouseX, mouseY);
 		int ty = 0;
 		if(isOverCreatePattern(mouseX-guiLeft, mouseY-guiTop)) {
 			ty = 1;
@@ -66,45 +67,25 @@ public class LargePatternEncoderScreen extends BaseScreen<LargePatternEncoderCon
 		if(!container.tile.canCreatePattern()) {
 			ty = 2;
 		}
-		blit(guiLeft+216, guiTop+56, 258, 16*ty, 16, 16, 512, 512);
-		for(int i = 0; i < container.inventorySlots.size(); ++i) {
-			Slot slot = container.inventorySlots.get(i);
-			if(slot.isEnabled() && slot instanceof FalseCopyFluidSlot) {
-				FluidStack stack = ((FalseCopyFluidSlot)slot).fluidInventory.getStackInSlot(slot.getSlotIndex());
-				if(!stack.isEmpty()) {
-					FluidRenderer.INSTANCE.render(guiLeft+slot.xPos, guiTop+slot.yPos, stack);
-					renderQuantity(guiLeft+slot.xPos, guiTop+slot.yPos, API.instance().getQuantityFormatter().formatInBucketForm(stack.getAmount()), 0xFFFFFF);
-					RenderSystem.disableLighting();
-				}
-			}
-		}
+		blit(matrixStack, guiLeft+216, guiTop+56, 258, 16*ty, 16, 16, 512, 512);
 	}
 
 	@Override
-	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
-		super.drawGuiContainerForegroundLayer(mouseX, mouseY);
-		font.drawString(title.getFormattedText(), xSize/2-font.getStringWidth(title.getFormattedText())/2, 6, 0x404040);
-		font.drawString(container.playerInventory.getDisplayName().getFormattedText(), container.getPlayerInvX(), container.getPlayerInvY()-11, 0x404040);
-		for(int i = 0; i < container.inventorySlots.size(); ++i) {
-			Slot slot = container.inventorySlots.get(i);
-			if(slot.isEnabled() && slot instanceof FalseCopyFluidSlot) {
-				FluidStack stack = ((FalseCopyFluidSlot)slot).fluidInventory.getStackInSlot(slot.getSlotIndex());
-				if(!stack.isEmpty() && inBounds(slot.xPos, slot.yPos, 17, 17, mouseX-guiLeft, mouseY-guiTop)) {
-					renderTooltip(stack.getDisplayName().getFormattedText(), mouseX-guiLeft, mouseY-guiTop);
-				}
-			}
-		}
+	protected void drawGuiContainerForegroundLayer(MatrixStack matrixStack, int mouseX, int mouseY) {
+		font.drawString(matrixStack, title.getString(), xSize/2-font.getStringWidth(title.getString())/2, 6, 0x404040);
+		font.drawString(matrixStack, container.playerInventory.getDisplayName().getString(), container.getPlayerInvX(), container.getPlayerInvY()-11, 0x404040);
+		super.drawGuiContainerForegroundLayer(matrixStack, mouseX, mouseY);
 		for(Widget widget : buttons) {
 			if(widget.isMouseOver(mouseX, mouseY)) {
-				widget.renderToolTip(mouseX-guiLeft, mouseY-guiTop);
+				widget.renderToolTip(matrixStack, mouseX-guiLeft, mouseY-guiTop);
 				break;
 			}
 		}
 		if(isOverClear(mouseX-guiLeft, mouseY-guiTop)) {
-			renderTooltip(I18n.format("misc.refinedstorage.clear"), mouseX-guiLeft, mouseY-guiTop);
+			renderTooltip(matrixStack, new TranslationTextComponent("misc.refinedstorage.clear"), mouseX-guiLeft, mouseY-guiTop);
 		}
 		if(isOverCreatePattern(mouseX-guiLeft, mouseY-guiTop)) {
-			renderTooltip(I18n.format("gui.refinedstorage.grid.pattern_create"), mouseX-guiLeft, mouseY-guiTop);
+			renderTooltip(matrixStack, new TranslationTextComponent("gui.refinedstorage.grid.pattern_create"), mouseX-guiLeft, mouseY-guiTop);
 		}
 	}
 
@@ -216,62 +197,54 @@ public class LargePatternEncoderScreen extends BaseScreen<LargePatternEncoderCon
 		return super.mouseClicked(mouseX, mouseY, mouseButton);
 	}
 
-	public void renderQuantity(int x, int y, String qty, int color) {
-		boolean large = minecraft.getForceUnicodeFont() || RS.CLIENT_CONFIG.getGrid().getLargeFont();
-		RenderSystem.pushMatrix();
-		RenderSystem.translatef(x, y, 300F);
-		if(!large) {
-			RenderSystem.scalef(0.5F, 0.5F, 1.0F);
-		}
-		font.drawStringWithShadow(qty, (large ? 16 : 30)-font.getStringWidth(qty), large ? 8F : 22F, color);
-		RenderSystem.popMatrix();
-	}
-
 	class ProcessingTypeButton extends Button {
 
 		public ProcessingTypeButton(int x, int y, Button.IPressable onPress) {
-			super(x, y, 18, 18, "", onPress);
+			super(x, y, 18, 18, StringTextComponent.EMPTY, onPress);
 		}
 
 		@Override
-		public void renderButton(int mouseX, int mouseY, float partialTicks) {
+		public void renderButton(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
 			RenderSystem.color4f(1, 1, 1, 1);
 			RenderSystem.enableAlphaTest();
 			isHovered = inBounds(x, y, width, height, mouseX, mouseY);
 			minecraft.getTextureManager().bindTexture(RS_ICONS);
-			blit(x, y, 238, isHovered ? 35 : 16, 18, 18);
-			blit(x+1, y+1, container.tile.processingType*16, 128, 16, 16);
+			blit(matrixStack, x, y, 238, isHovered ? 35 : 16, 18, 18);
+			blit(matrixStack, x+1, y+1, container.tile.processingType*16, 128, 16, 16);
 			if(isHovered) {
 				RenderSystem.enableBlend();
 				RenderSystem.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 				RenderSystem.color4f(1, 1, 1, 0.5F);
-				blit(x, y, 238, 54, 18, 18);
+				blit(matrixStack, x, y, 238, 54, 18, 18);
 				RenderSystem.disableBlend();
 			}
 		}
 
 		@Override
-		public void renderToolTip(int mouseX, int mouseY) {
-			renderTooltip(Arrays.asList(I18n.format("sidebutton.refinedstorage.type"), TextFormatting.GRAY+I18n.format("sidebutton.refinedstorage.type."+container.tile.processingType)), mouseX, mouseY);
+		public void renderToolTip(MatrixStack matrixStack, int mouseX, int mouseY) {
+			func_243308_b(matrixStack, Arrays.asList(
+					new TranslationTextComponent("sidebutton.refinedstorage.type"),
+					new TranslationTextComponent("sidebutton.refinedstorage.type."+container.tile.processingType).setStyle(Styles.GRAY)),
+					mouseX, mouseY);
 		}
 	}
 
 	class ShowJEIRecipesButton extends Button {
 
 		ShowJEIRecipesButton(int x, int y, Button.IPressable onPress) {
-			super(x, y, 22, 16, "", onPress);
+			super(x, y, 22, 16, StringTextComponent.EMPTY, onPress);
 		}
 
 		@Override
-		public void renderButton(int mouseX, int mouseY, float partialTicks) {
+		public void renderButton(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
 			if(visible) {
 				isHovered = mouseX >= x && mouseY >= y && mouseX < x + width && mouseY < y + height;
 			}
 		}
 
 		@Override
-		public void renderToolTip(int mouseX, int mouseY) {
-			renderTooltip(I18n.format("jei.tooltip.show.recipes"), mouseX, mouseY);
+		public void renderToolTip(MatrixStack matrixStack, int mouseX, int mouseY) {
+			renderTooltip(matrixStack, new TranslationTextComponent("jei.tooltip.show.recipes"), mouseX, mouseY);
 		}
 	}
 }

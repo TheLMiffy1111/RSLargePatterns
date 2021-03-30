@@ -6,7 +6,6 @@ import org.apache.commons.lang3.tuple.Pair;
 
 import com.refinedmods.refinedstorage.util.StackUtils;
 
-import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TranslationTextComponent;
@@ -44,7 +43,7 @@ public class FluidAmountScreen extends AmountScreen<FluidAmountContainer> {
 	public void init() {
 		super.init();
 		if(alternativesScreenFactory != null) {
-			addButton(guiLeft+114, cancelButton.y+24, getOkCancelButtonWidth(), 20, I18n.format("gui.refinedstorage.alternatives"), btn->{
+			addButton(guiLeft+114, cancelButton.y+24, getOkCancelButtonWidth(), 20, new TranslationTextComponent("gui.refinedstorage.alternatives"), btn->{
 				minecraft.displayGuiScreen(alternativesScreenFactory.apply(this));
 			});
 		}

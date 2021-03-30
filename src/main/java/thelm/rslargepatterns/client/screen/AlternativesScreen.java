@@ -7,13 +7,13 @@ import java.util.Set;
 
 import org.lwjgl.glfw.GLFW;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.refinedmods.refinedstorage.render.FluidRenderer;
 import com.refinedmods.refinedstorage.tile.config.IType;
 import com.refinedmods.refinedstorage.util.RenderUtils;
 
 import net.minecraft.client.gui.widget.button.Button;
-import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.item.Item;
@@ -22,6 +22,7 @@ import net.minecraft.tags.FluidTags;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.fluids.FluidAttributes;
 import net.minecraftforge.fluids.FluidStack;
 import thelm.rslargepatterns.client.screen.widget.CheckboxWidget;
@@ -125,9 +126,9 @@ public class AlternativesScreen extends BaseScreen<AlternativesContainer> {
 				yy += 18;
 			}
 		}
-		Button apply = addButton(guiLeft+7, guiTop+114, 50, 20, I18n.format("gui.refinedstorage.alternatives.apply"), btn->apply());
+		Button apply = addButton(guiLeft+7, guiTop+114, 50, 20, new TranslationTextComponent("gui.refinedstorage.alternatives.apply"), btn->apply());
 		apply.active = lines.size() > 1;
-		addButton(guiLeft+apply.getWidth()+7+4, guiTop+114, 50, 20, I18n.format("gui.cancel"), btn -> close());
+		addButton(guiLeft+apply.getWidth()+7+4, guiTop+114, 50, 20, new TranslationTextComponent("gui.cancel"), btn -> close());
 	}
 
 	@Override
@@ -145,15 +146,15 @@ public class AlternativesScreen extends BaseScreen<AlternativesContainer> {
 	}
 
 	@Override
-	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
-		font.drawString(title.getFormattedText(), 7, 7, 0x404040);
+	protected void drawGuiContainerForegroundLayer(MatrixStack matrixStack, int mouseX, int mouseY) {
+		font.drawString(matrixStack, title.getString(), 7, 7, 0x404040);
 		int x = 8;
 		int y = 20;
 		for(int i = 0; i < lines.size(); ++i) {
 			boolean visible = i >= scrollbar.getOffset() && i < scrollbar.getOffset() + getVisibleRows();
 			if (visible) {
 				lines.get(i).layoutDependantControls(true, guiLeft + x + 3, guiTop + y + 3);
-				lines.get(i).render(x, y);
+				lines.get(i).render(matrixStack, x, y);
 				y += 18;
 			}
 			else {
@@ -165,10 +166,16 @@ public class AlternativesScreen extends BaseScreen<AlternativesContainer> {
 		for(int i = 0; i < lines.size(); ++i) {
 			boolean visible = i >= scrollbar.getOffset() && i < scrollbar.getOffset() + getVisibleRows();
 			if(visible) {
-				lines.get(i).renderTooltip(x, y, mouseX, mouseY);
+				lines.get(i).renderTooltip(matrixStack, x, y, mouseX, mouseY);
 				y += 18;
 			}
 		}
+	}
+
+	@Override
+	protected void drawGuiContainerBackgroundLayer(MatrixStack matrixStack, float partialTicks, int mouseX, int mouseY) {
+		super.drawGuiContainerBackgroundLayer(matrixStack, partialTicks, mouseX, mouseY);
+		scrollbar.render(matrixStack);
 	}
 
 	@Override
@@ -231,10 +238,10 @@ public class AlternativesScreen extends BaseScreen<AlternativesContainer> {
 
 	private interface Line {
 
-		default void render(int x, int y) {
+		default void render(MatrixStack matrixStack, int x, int y) {
 		}
 
-		default void renderTooltip(int x, int y, int mx, int my) {
+		default void renderTooltip(MatrixStack matrixStack, int x, int y, int mx, int my) {
 		}
 
 		default void layoutDependantControls(boolean visible, int x, int y) {
@@ -250,10 +257,10 @@ public class AlternativesScreen extends BaseScreen<AlternativesContainer> {
 		}
 
 		@Override
-		public void render(int x, int y) {
+		public void render(MatrixStack matrixStack, int x, int y) {
 			RenderSystem.color4f(1, 1, 1, 1);
 			itemRenderer.renderItemAndEffectIntoGUI(item, x+3, y+2);
-			font.drawString(item.getDisplayName().getFormattedText(), x+4+19, y+7, 0x404040);
+			font.drawString(matrixStack, item.getDisplayName().getString(), x+4+19, y+7, 0x404040);
 		}
 	}
 
@@ -266,9 +273,9 @@ public class AlternativesScreen extends BaseScreen<AlternativesContainer> {
 		}
 
 		@Override
-		public void render(int x, int y) {
-			FluidRenderer.INSTANCE.render(x+3, y+2, fluid);
-			font.drawString(fluid.getDisplayName().getFormattedText(), x+4+19, y+7, 0x404040);
+		public void render(MatrixStack matrixStack, int x, int y) {
+			FluidRenderer.INSTANCE.render(matrixStack, x+3, y+2, fluid);
+			font.drawString(matrixStack, fluid.getDisplayName().getString(), x+4+19, y+7, 0x404040);
 		}
 	}
 
@@ -302,7 +309,7 @@ public class AlternativesScreen extends BaseScreen<AlternativesContainer> {
 		}
 
 		@Override
-		public void render(int x, int y) {
+		public void render(MatrixStack matrixStack, int x, int y) {
 			for(ItemStack item : items) {
 				itemRenderer.renderItemAndEffectIntoGUI(item, x+3, y);
 				x += 17;
@@ -310,10 +317,10 @@ public class AlternativesScreen extends BaseScreen<AlternativesContainer> {
 		}
 
 		@Override
-		public void renderTooltip(int x, int y, int mx, int my) {
+		public void renderTooltip(MatrixStack matrixStack, int x, int y, int mx, int my) {
 			for(ItemStack item : items) {
 				if(RenderUtils.inBounds(x+3, y, 16, 16, mx, my)) {
-					AlternativesScreen.this.renderTooltip(item, mx, my);
+					AlternativesScreen.this.renderTooltip(matrixStack, item, mx, my);
 				}
 				x += 17;
 			}
@@ -330,18 +337,18 @@ public class AlternativesScreen extends BaseScreen<AlternativesContainer> {
 		}
 
 		@Override
-		public void render(int x, int y) {
+		public void render(MatrixStack matrixStack, int x, int y) {
 			for(FluidStack fluid : fluids) {
-				FluidRenderer.INSTANCE.render(x + 3, y, fluid);
+				FluidRenderer.INSTANCE.render(matrixStack, x + 3, y, fluid);
 				x += 17;
 			}
 		}
 
 		@Override
-		public void renderTooltip(int x, int y, int mx, int my) {
+		public void renderTooltip(MatrixStack matrixStack, int x, int y, int mx, int my) {
 			for(FluidStack fluid : fluids) {
 				if(RenderUtils.inBounds(x + 3, y, 16, 16, mx, my)) {
-					AlternativesScreen.this.renderTooltip(fluid.getDisplayName().getFormattedText(), mx, my);
+					AlternativesScreen.this.renderTooltip(matrixStack, fluid.getDisplayName(), mx, my);
 				}
 				x += 17;
 			}

@@ -1,5 +1,6 @@
 modLoader="javafml"
-loaderVersion="[28,)"
+loaderVersion="[34,)"
+license="MIT"
 issueTrackerURL="https://github.com/TheLMiffy1111/RSLargePatterns/issues"
 displayURL="https://www.curseforge.com/minecraft/mc-mods/rslargepatterns"
 authors="TheLMiffy1111"
@@ -12,12 +13,12 @@ description="An Refined Storage addon that adds patterns with more than 9 inputs
 [[dependencies.rslargepatterns]]
     modId="forge"
     mandatory=true
-    versionRange="[30.0.48,)"
+    versionRange="[34.0.0,)"
     ordering="NONE"
     side="BOTH"
 [[dependencies.rslargepatterns]]
     modId="refinedstorage"
     mandatory=true
-    versionRange="[1.8.5,)"
+    versionRange="[1.9.0,)"
     ordering="NONE"
     side="BOTH"

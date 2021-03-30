@@ -31,5 +31,6 @@ public class SetProcessingTypePacket {
 				container.tile.processingType = pkt.value;
 			}
 		});
+		ctx.get().setPacketHandled(true);
 	}
 }

@@ -46,5 +46,6 @@ public class SetItemStackPacket {
 				}
 			}
 		});
+		ctx.get().setPacketHandled(true);
 	}
 }

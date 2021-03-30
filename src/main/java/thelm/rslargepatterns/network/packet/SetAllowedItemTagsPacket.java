@@ -32,7 +32,7 @@ public class SetAllowedItemTagsPacket {
 
 	public static SetAllowedItemTagsPacket decode(PacketBuffer buf) {
 		List<Set<ResourceLocation>> tags = new ArrayList<>();
-		for(int size = buf.readInt(), i = 0; i < size; ++i) {
+		for(int size = buf.readShort(), i = 0; i < size; ++i) {
 			int setSize = buf.readInt();
 			Set<ResourceLocation> values = new HashSet<>();
 			for(int j = 0; j < setSize; ++j) {
@@ -53,5 +53,6 @@ public class SetAllowedItemTagsPacket {
 				container.tile.syncTile(false);
 			}
 		});
+		ctx.get().setPacketHandled(true);
 	}
 }

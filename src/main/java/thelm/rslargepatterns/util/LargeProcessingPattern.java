@@ -2,12 +2,11 @@ package thelm.rslargepatterns.util;
 
 import java.util.List;
 
-import com.refinedmods.refinedstorage.RS;
 import com.refinedmods.refinedstorage.api.autocrafting.ICraftingPattern;
 import com.refinedmods.refinedstorage.api.autocrafting.ICraftingPatternContainer;
 import com.refinedmods.refinedstorage.api.util.IComparer;
 import com.refinedmods.refinedstorage.apiimpl.API;
-import com.refinedmods.refinedstorage.apiimpl.autocrafting.task.v5.CraftingTaskFactory;
+import com.refinedmods.refinedstorage.apiimpl.autocrafting.task.v6.CraftingTaskFactory;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.ICraftingRecipe;
@@ -108,13 +107,15 @@ public class LargeProcessingPattern implements ICraftingPattern {
 
 	@Override
 	public ResourceLocation getCraftingTaskFactoryId() {
-		return RS.SERVER_CONFIG.getAutocrafting().useExperimentalAutocrafting()
-				? com.refinedmods.refinedstorage.apiimpl.autocrafting.task.v6.CraftingTaskFactory.ID
-						: CraftingTaskFactory.ID;
+		return CraftingTaskFactory.ID;
 	}
 
 	@Override
-	public boolean canBeInChainWith(ICraftingPattern other) {
+	public boolean equals(Object otherObj) {
+		if(!(otherObj instanceof ICraftingPattern)) {
+			return false;
+		}
+		ICraftingPattern other = (ICraftingPattern) otherObj;
 		if(!other.isProcessing()) {
 			return false;
 		}
@@ -162,7 +163,7 @@ public class LargeProcessingPattern implements ICraftingPattern {
 	}
 
 	@Override
-	public int getChainHashCode() {
+	public int hashCode() {
 		int result = 0;
 		for(List<ItemStack> inputs : this.inputs) {
 			for(ItemStack input : inputs) {

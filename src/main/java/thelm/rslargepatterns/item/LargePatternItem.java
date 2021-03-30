@@ -98,7 +98,7 @@ public class LargePatternItem extends Item implements ICraftingPatternProvider {
 		}
 		else {
 			tooltip.add(new TranslationTextComponent("misc.refinedstorage.pattern.invalid").setStyle(Styles.RED));
-			tooltip.add(pattern.getErrorMessage().setStyle(Styles.GRAY));
+			tooltip.add(pattern.getErrorMessage().copyRaw().setStyle(Styles.GRAY));
 		}
 	}
 

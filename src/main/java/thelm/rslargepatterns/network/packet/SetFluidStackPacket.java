@@ -44,5 +44,6 @@ public class SetFluidStackPacket {
 				}
 			}
 		});
+		ctx.get().setPacketHandled(true);
 	}
 }

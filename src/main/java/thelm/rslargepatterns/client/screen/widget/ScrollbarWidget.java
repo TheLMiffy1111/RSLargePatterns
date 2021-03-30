@@ -3,6 +3,7 @@ package thelm.rslargepatterns.client.screen.widget;
 import java.util.LinkedList;
 import java.util.List;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.refinedmods.refinedstorage.screen.widget.ScrollbarWidgetListener;
 import com.refinedmods.refinedstorage.util.RenderUtils;
@@ -60,10 +61,10 @@ public class ScrollbarWidget implements IGuiEventListener {
 		return enabled;
 	}
 
-	public void render() {
+	public void render(MatrixStack matrixStack) {
 		RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
 		screen.getMinecraft().textureManager.bindTexture(RS_ICONS);
-		screen.blit(screen.getGuiLeft()+x, screen.getGuiTop()+y+(int)Math.min(height-SCROLLER_HEIGHT, (float)offset/(float)maxOffset*(float)(height-SCROLLER_HEIGHT)), isEnabled() ? 232 : 244, 0, 12, 15);
+		screen.blit(matrixStack, screen.getGuiLeft()+x, screen.getGuiTop()+y+(int)Math.min(height-SCROLLER_HEIGHT, (float)offset/(float)maxOffset*(float)(height-SCROLLER_HEIGHT)), isEnabled() ? 232 : 244, 0, 12, 15);
 	}
 
 	@Override

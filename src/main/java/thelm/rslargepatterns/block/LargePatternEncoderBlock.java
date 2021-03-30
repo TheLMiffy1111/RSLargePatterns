@@ -54,7 +54,7 @@ public class LargePatternEncoderBlock extends Block {
 
 	@Override
 	public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity playerIn, Hand hand, BlockRayTraceResult rayTraceResult) {
-		if(playerIn.isShiftKeyDown()) {
+		if(playerIn.isSneaking()) {
 			return ActionResultType.PASS;
 		}
 		if(!worldIn.isRemote) {

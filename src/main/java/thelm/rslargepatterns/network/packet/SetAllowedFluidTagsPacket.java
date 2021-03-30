@@ -53,5 +53,6 @@ public class SetAllowedFluidTagsPacket {
 				container.tile.syncTile(false);
 			}
 		});
+		ctx.get().setPacketHandled(true);
 	}
 }

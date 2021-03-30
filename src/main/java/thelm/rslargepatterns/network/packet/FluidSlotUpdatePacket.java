@@ -43,5 +43,6 @@ public class FluidSlotUpdatePacket {
 				}
 			}
 		});
+		ctx.get().setPacketHandled(true);
 	}
 }

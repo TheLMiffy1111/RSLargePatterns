@@ -2,6 +2,7 @@ package thelm.rslargepatterns.client.screen.widget;
 
 import java.util.function.Consumer;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 
@@ -9,6 +10,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.widget.button.CheckboxButton;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.StringTextComponent;
 
 public class CheckboxWidget extends CheckboxButton {
 
@@ -19,7 +21,7 @@ public class CheckboxWidget extends CheckboxButton {
 	private boolean shadow = true;
 
 	public CheckboxWidget(int x, int y, String text, boolean isChecked, Consumer<CheckboxButton> onPress) {
-		super(x, y, Minecraft.getInstance().fontRenderer.getStringWidth(text)+BOX_WIDTH, 10, text, isChecked);
+		super(x, y, Minecraft.getInstance().fontRenderer.getStringWidth(text)+BOX_WIDTH, 10, new StringTextComponent(text), isChecked);
 		this.onPress = onPress;
 	}
 
@@ -34,7 +36,7 @@ public class CheckboxWidget extends CheckboxButton {
 	}
 
 	@Override
-	public void renderButton(int mx, int my, float partialTicks) {
+	public void renderButton(MatrixStack matrixStack, int mx, int my, float partialTicks) {
 		Minecraft mc = Minecraft.getInstance();
 		mc.getTextureManager().bindTexture(TEXTURE);
 		RenderSystem.enableDepthTest();
@@ -43,8 +45,8 @@ public class CheckboxWidget extends CheckboxButton {
 		RenderSystem.enableBlend();
 		RenderSystem.defaultBlendFunc();
 		RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
-		blit(x, y, 0F, isChecked() ? 10F : 0F, 10, height, 16, 32);
-		renderBg(mc, mx, my);
+		blit(matrixStack, x, y, isFocused() ? 10.0F : 0.0F, isChecked() ? 10F : 0F, 10, 10, 32, 32);
+		renderBg(matrixStack, mc, mx, my);
 		int color = 0xE0E0E0;
 		if(!active) {
 			color = 0xA0A0A0;
@@ -53,10 +55,10 @@ public class CheckboxWidget extends CheckboxButton {
 			color = packedFGColor;
 		}
 		if(shadow) {
-			super.drawString(fontRenderer, getMessage(), x+13, y+(height-8)/2, color);
+			super.drawString(matrixStack, fontRenderer, getMessage(), x+13, y+(height-8)/2, color);
 		}
 		else {
-			fontRenderer.drawString(getMessage(), x+13, y+(height-8)/2F, color);
+			fontRenderer.func_243248_b(matrixStack, getMessage(), x+13, y+(height-8)/2F, color);
 		}
 	}
 }

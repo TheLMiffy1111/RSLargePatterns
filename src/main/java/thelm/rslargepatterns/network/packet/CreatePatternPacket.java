@@ -27,5 +27,6 @@ public class CreatePatternPacket {
 				container.tile.onCreatePattern();
 			}
 		});
+		ctx.get().setPacketHandled(true);
 	}
 }

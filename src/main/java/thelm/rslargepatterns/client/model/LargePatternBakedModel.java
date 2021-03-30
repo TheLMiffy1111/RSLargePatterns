@@ -16,10 +16,10 @@ import net.minecraft.client.renderer.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.model.ItemOverride;
 import net.minecraft.client.renderer.model.ItemOverrideList;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Direction;
-import net.minecraft.world.World;
 import thelm.rslargepatterns.item.LargePatternItem;
 import thelm.rslargepatterns.util.LargeProcessingPattern;
 
@@ -52,8 +52,8 @@ public class LargePatternBakedModel implements IBakedModel {
 	}
 
 	@Override
-	public boolean func_230044_c_() {
-		return base.func_230044_c_();
+	public boolean isSideLit() {
+		return base.isSideLit();
 	}
 
 	@Override
@@ -80,7 +80,7 @@ public class LargePatternBakedModel implements IBakedModel {
 	public ItemOverrideList getOverrides() {
 		return new ItemOverrideList() {
 			@Override
-			public IBakedModel getModelWithOverrides(IBakedModel model, ItemStack stack, World world, LivingEntity entity) {
+			public IBakedModel getOverrideModel(IBakedModel model, ItemStack stack, ClientWorld world, LivingEntity entity) {
 				if(entity != null) {
 					LargeProcessingPattern pattern = LargePatternItem.fromCache(entity.world, stack);
 					if(canDisplayOutput(stack, pattern)) {
@@ -88,7 +88,7 @@ public class LargePatternBakedModel implements IBakedModel {
 						return Minecraft.getInstance().getItemRenderer().getItemModelWithOverrides(outputToRender, world, entity);
 					}
 				}
-				return super.getModelWithOverrides(model, stack, world, entity);
+				return super.getOverrideModel(model, stack, world, entity);
 			}
 
 			@Override

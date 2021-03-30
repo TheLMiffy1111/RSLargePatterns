@@ -27,5 +27,6 @@ public class ClearPatternPacket {
 				container.tile.clearMatrix();
 			}
 		});
+		ctx.get().setPacketHandled(true);
 	}
 }
