@@ -57,7 +57,7 @@ sourceSets {
     main
 }
 
-version = "2.1.0.2"
+version = "2.1.0.3"
 group = "thelm.rslargepatterns"
 archivesBaseName = "RSLargePatterns-1.16.5"
 
